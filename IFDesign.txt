@@ -1,0 +1,61 @@
+/*
+	ENGINE team: az általatok használt mértékegységet követve átálltunk a százalékos számításra.
+	---
+	Ez nem csak a pedál, hanem a kormány irányításában (WHEEL team) is megmutatkozik, annyi kivétellel,
+	hogy ez utóbbi esetében a 0% a középállás, innen számítjuk a teljes balra és jobbra tekerést -100%-nak
+	és +100%-nak.
+	Mindkét esetben biztosítjuk, hogy a tetszõlegesen nagy bemeneti jel (tekerés/nyomás/engedés) esetén
+	se lehessen a definiált határokon kívüli állapotokot elérni.
+	
+	GEARBOX team: mi a lejjebb is látható [P, R, N, D] váltóállapotokból indultunk ki.
+	---
+	Ezekhez lehetne valamilyen értékeket rendelni, illetve felmerült egy olyan ötlet is, hogy mivel az
+	állapotokból való átváltás nem minden esetben lehetséges tetszõleges másik állapotba, csinálhatnánk
+	egy állapotvezérlõt.
+	Ez lehetõvé tenné a váltókar mozgatásának ellenõrzését, nehogy pl. drive-bõl nagyobb sebesség mellett
+	reverse-be lehessen tenni.
+	Az aktuális állapotban nem lehetséges váltásokat (ide tartozik az aktuális állapot újbóli kérése is)
+	üres metódusként, a többit szoros feltételek mellett történõ állapotváltásokként kezelnénk.
+	Az újonnan felvett állapot szintén ilyen elven mûködne.
+	Nem biztos, hogy ez a mi modulunk felelõssége lenne, viszont ha úgy nézzük, hogy már az inputot is
+	szeretnénk meggátolni ilyen esetekben, talán mégis hozzánk áll a legközelebb.
+	
+	Pedál interfészbõl szándékosan definiáltunk csak egyfélét, hiszen ezt a mintát követi majd a gáz
+	és a fék is, csak implementációban térnek majd el.
+	Ettõl függetlenül, ha tényleg szükségesnek tartjátok, szívesen definiálunk külön interfészeket.
+	
+	TODO: További egyeztetés a Start/Stop és Service Code funkciókkal kapcsolatban.
+*/
+
+// wheelRotationPercent a [-100%; 100%] tartományban, DEFAULT = 0%
+ISteeringWheel
+
+	// wheelRotationPercent -= min(percent, 100 + wheelRotationPercent)
+	+turnLeft(percent) : void
+	
+	// wheelRotationPercent += min(percent, 100 - wheelRotationPercent)
+	+turnRight(percent) : void
+	
+	// Aktuális kormányállapot lekérése
+	+getWheelRotationPercent() : double
+	
+	
+// pedalPushPercent a [0%; 100%] tartományban, DEFAULT = 0%
+IPedal
+
+	// pedalPushPercent += min(percent, 100 - pedalPushPercent)
+	+push(percent) : void
+	
+	// pedalPushPercent -= min(percent, pedalPushPercent)
+	+release(percent) : void
+
+	// Aktuális pedálállapot lekérése
+	+getPedalPushPercent() : double
+	
+	
+// gearMode a [P, R, N, D] tartományban, DEFAULT = P (és elvileg csak ebben indítható a motor)
+IGearShift
+	+shiftToPark() : void
+	+shiftToReverse() : void
+	+shiftToNeutral() : void
+	+shiftToDrive() : void
