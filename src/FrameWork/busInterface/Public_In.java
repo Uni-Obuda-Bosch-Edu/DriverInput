@@ -8,7 +8,7 @@ public interface Public_In {
 	public double getSteeringWheelRotationPercent();
 	public double getBrakePedalPushPercent();
 	public double getGasPedalPushPercent();
-	public GearMode getShiftLeverPosition();
+	public int getShiftLeverPosition();
 	
 	public double getGearTorque();    
 	public int getGearRevolution();  

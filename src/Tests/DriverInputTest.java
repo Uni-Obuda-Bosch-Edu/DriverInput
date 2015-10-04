@@ -1,4 +1,4 @@
-package Implementations;
+package Tests;
 
 import java.util.Random;
 
@@ -7,8 +7,9 @@ import org.testng.annotations.*;
 
 import FrameWork.virtualDataBus.Container;
 import FrameWork.virtualDataBus.Container.GearMode;
+import Implementations.DriverInput;
 
-public class DriverInputTestNG {
+public class DriverInputTest {
 
 	private Container bus;
 	private DriverInput input;
@@ -23,7 +24,7 @@ public class DriverInputTestNG {
 	@BeforeTest
 	public void beforeTest() {
 		bus = Container.getInstance();
-		input = new DriverInput(bus);
+		input = new DriverInput(bus, bus);
 		Random rand = new Random();
 		randomInRangeValue = rand.nextInt(99) + 1; // required magic num
 		randomOutOfRangeValue = rand.nextInt(99) + 100; // required magic num
@@ -32,7 +33,7 @@ public class DriverInputTestNG {
 	@Test
 	public void testPushEngineToggleButton_InParking() {
 		bus.setEngineToggleButtonState(false);
-		bus.setShiftLeverPosition(GearMode.Parking);
+		bus.setShiftLeverPosition(DriverInput.ShiftLeverPositionParking);
 		input.pushEngineToggleButton();
 		Assert.assertTrue(bus.getEngineToggleButtonState());
 	}
@@ -40,7 +41,7 @@ public class DriverInputTestNG {
 	@Test
 	public void testPushEngineToggleButton_NotInParking() {
 		bus.setEngineToggleButtonState(false);
-		bus.setShiftLeverPosition(GearMode.Neutral);
+		bus.setShiftLeverPosition(DriverInput.ShiftLeverPositionNeutral);
 		input.pushEngineToggleButton();
 		Assert.assertFalse(bus.getEngineToggleButtonState());
 	}
@@ -197,19 +198,19 @@ public class DriverInputTestNG {
 	
 	@Test
 	public void testMoveShiftLeverTo_PushingBrake() {
-		final GearMode newGearMode = GearMode.Drive;
-		bus.setShiftLeverPosition(GearMode.Parking);
+		final int newLeverPosition = DriverInput.ShiftLeverPositionDrive;
+		bus.setShiftLeverPosition(DriverInput.ShiftLeverPositionParking);
 		bus.setBrakePedalPushPercent(maxPedalPushPercent);
-		input.moveShiftLeverTo(newGearMode);
-		Assert.assertEquals(bus.getShiftLeverPosition(), newGearMode);		
+		input.moveShiftLeverTo(newLeverPosition);
+		Assert.assertEquals(bus.getShiftLeverPosition(), newLeverPosition);		
 	}
 	
 	@Test
 	public void testMoveShiftLeverTo_NotPushingBrake() {
-		final GearMode startGearMode = GearMode.Parking;
-		bus.setShiftLeverPosition(startGearMode);
+		final int startLeverPosition = DriverInput.ShiftLeverPositionParking;
+		bus.setShiftLeverPosition(startLeverPosition);
 		bus.setBrakePedalPushPercent(minPedalPushPercent);
-		input.moveShiftLeverTo(GearMode.Drive);
-		Assert.assertEquals(bus.getShiftLeverPosition(), startGearMode);	
+		input.moveShiftLeverTo(DriverInput.ShiftLeverPositionDrive);
+		Assert.assertEquals(bus.getShiftLeverPosition(), startLeverPosition);	
 	}
 }

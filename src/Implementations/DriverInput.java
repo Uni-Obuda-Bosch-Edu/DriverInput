@@ -6,16 +6,21 @@ import FrameWork.virtualDataBus.Container;
 import FrameWork.virtualDataBus.Container.GearMode;
 
 public class DriverInput {
-	private final static double MaxSteeringWheelRotationPerDirection = 100.0;
-	private final static double MaxPedalPushValue = 100.0;
+	public final static int MaxSteeringWheelRotationPerDirection = 100;
+	public final static int MaxPedalPushValue = 100;	
+	public final static int ShiftLeverPositionParking = 0;
+	public final static int ShiftLeverPositionReverse = 1;
+	public final static int ShiftLeverPositionNeutral = 2;
+	public final static int ShiftLeverPositionDrive = 3;
+	
 	private Public_In in;
 	private DriverInput_Out out;
 
-	public DriverInput(Container container) {
-		this.in = container;
-		this.out = container;
+	public DriverInput(Public_In in, DriverInput_Out out) {
+		this.in = in;
+		this.out = out;
 		out.setEngineToggleButtonState(false);
-		out.setShiftLeverPosition(GearMode.Parking);
+		out.setShiftLeverPosition(0);
 		out.setSteeringWheelRotationPercent(0.0);
 		out.setGasPedalPushPercent(0.0);
 		out.setBrakePedalPushPercent(0.0);
@@ -23,7 +28,7 @@ public class DriverInput {
 
 	public void pushEngineToggleButton() {
 		boolean currentState = in.getEngineToggleButtonState();
-		if (currentState == false && in.getShiftLeverPosition() != GearMode.Parking)
+		if (currentState == false && in.getShiftLeverPosition() != ShiftLeverPositionParking)
 			return;
 		out.setEngineToggleButtonState(!currentState);
 	}
@@ -64,9 +69,9 @@ public class DriverInput {
 		out.setBrakePedalPushPercent(currentPosition);
 	}
 
-	public void moveShiftLeverTo(GearMode mode) {
+	public void moveShiftLeverTo(int position) {
 		if (in.getBrakePedalPushPercent() != MaxPedalPushValue)
 			return;
-		out.setShiftLeverPosition(mode);
+		out.setShiftLeverPosition(position);
 	}
 }

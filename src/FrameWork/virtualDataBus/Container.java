@@ -43,12 +43,12 @@ public class Container implements Engine_Out, DriverInput_Out, Gearbox_Out, Whee
 		GasPedalPushPercent = gasPedalPushPercent;
 	}
 
-	public GearMode getShiftLeverPosition() {
+	public int getShiftLeverPosition() {
 		return ShiftLeverPosition;
 	}
 
-	public void setShiftLeverPosition(GearMode mode) {
-		ShiftLeverPosition = mode;
+	public void setShiftLeverPosition(int position) {
+		ShiftLeverPosition = position;
 	}
 
 	public double getGearTorque() {
@@ -272,7 +272,7 @@ public class Container implements Engine_Out, DriverInput_Out, Gearbox_Out, Whee
 	private double SteeringWheelRotationPercent;
 	private double BrakePedalPushPercent;
 	private double GasPedalPushPercent;
-	private GearMode ShiftLeverPosition;
+	private int ShiftLeverPosition;
 	
 	/*Gearbox*/
 	private double GearTorque;
