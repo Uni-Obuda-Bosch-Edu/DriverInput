@@ -18,7 +18,7 @@ import Tests.InputVisualizer;
  * 			holding B: push/release brake pedal
  */
 public class DriverInputHandler implements KeyListener {
-	private final static double movementUnit = 2.0;
+	private final static double movementUnit = 1.0;
 	private boolean holdingGasModKey = false;
 	private boolean holdingBrakeModKey = false;
 	private DriverInput input;
